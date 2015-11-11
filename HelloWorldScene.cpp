@@ -6,6 +6,11 @@ USING_NS_CC;
 
 Scene* HelloWorld::createScene()
 {
+	/*auto scene = Scene::create();
+	auto layer = HelloWorld::create();
+	scene->addChild(layer);
+	return scene;*/
+
 	auto scene = Scene::createWithPhysics();
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	//scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
@@ -68,12 +73,13 @@ bool HelloWorld::init()
 	{
 		knight = cocos2d::Sprite3D::create("Sprite3DTest/orc.c3b");
 		knight->setScale(2.5);
-		knight->setNormalizedPosition(Vec2(.5f, .3f));
+		knight->setNormalizedPosition(Vec2(0.5f, 0.3f));
 		knight->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 1.20 + origin.y));
+		//knight->setPositionZ(0);
 		knight->setRotation3D(Vec3(0, 180, 0));
 		knight->setGlobalZOrder(-1);
 
-		spriteBodyKnight = PhysicsBody::createBox(Size(35, 10), PhysicsMaterial(0.0f, 0.0f, 0.0f), Vec2(30, -20));
+		spriteBodyKnight = PhysicsBody::createBox(Size(35, 45), PhysicsMaterial(0.0f, 1.0f, 0.0f), Vec2(30, -10));
 		spriteBodyKnight->setCollisionBitmask(1);
 		spriteBodyKnight->setContactTestBitmask(true);
 		knight->setPhysicsBody(spriteBodyKnight);
@@ -84,6 +90,13 @@ bool HelloWorld::init()
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(HelloWorld::onContactBegin, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+	/*auto animation = Animation3D::create("Sprite3DTest/orc_jump.c3t");
+	if (animation)
+	{
+	auto animate = Animate3D::create(animation);
+	knight->runAction(RepeatForever::create(animate));
+	}*/
 
 	auto listenerkey = EventListenerKeyboard::create();
 	listenerkey->onKeyPressed = CC_CALLBACK_2(HelloWorld::onKeyPressed, this);
@@ -125,6 +138,16 @@ void HelloWorld::update(float dt)
 		}
 	}
 
+	/*auto animation = Animation3D::create("xpn2015/platform01.c3b");
+	auto animate = Animate3D::create(animation);
+	platformDinamic->runAction(RepeatForever::create(animate));
+	platformDinamic->setForce2DQueue(true);*/
+
+	/*spring = cocos2d::Sprite3D::create("xpn2015/spring.c3b");
+	spring->setScale(20.f);
+	spring->setPosition(Vec2(350, 300));
+	spring->setGlobalZOrder(-1);
+	addChild(spring);*/
 }
 
 bool HelloWorld::onContactBegin(cocos2d::PhysicsContact &contact)
@@ -133,7 +156,29 @@ bool HelloWorld::onContactBegin(cocos2d::PhysicsContact &contact)
 	PhysicsBody *b = contact.getShapeB()->getBody();
 
 	// check if the bodies have collided
-	if ((1 == a->getCollisionBitmask() && 2 == b->getCollisionBitmask()) || (2 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask()))
+	if (1 == a->getCollisionBitmask() && 2 == b->getCollisionBitmask())
+	{
+		if (a->getPosition().y >= b->getPosition().y)
+		{
+			return true;
+		}
+	}
+	else if (2 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask())
+	{
+		if (a->getPosition().y >= b->getPosition().y)
+		{
+			return false;
+		}
+	}
+
+	/*{
+		auto animation = Animation3D::create("Sprite3DTest/orc_jump.c3t");
+		if (animation)
+		{
+			auto animate = Animate3D::create(animation);
+			knight->runAction(RepeatForever::create(animate));
+		}
+	}*/
 
 	return true;
 }
