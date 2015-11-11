@@ -54,7 +54,7 @@ bool HelloWorld::init()
 		platformStatic[i]->setGlobalZOrder(-1);
 
 		spriteBodyPlatformStatic = PhysicsBody::createBox(Size(57.0f, 20.0f), PhysicsMaterial(0.0f, 0.0f, 0.0f), Vec2(55, -10));
-		spriteBodyPlatformStatic->setGravityEnable(false);
+		//spriteBodyPlatformStatic->setGravityEnable(false);
 		spriteBodyPlatformStatic->setDynamic(false);
 		spriteBodyPlatformStatic->setCollisionBitmask(2);
 		spriteBodyPlatformStatic->setContactTestBitmask(true);
@@ -123,7 +123,7 @@ void HelloWorld::update(float dt)
 				platformStatic[i]->setGlobalZOrder(-1);
 
 				spriteBodyPlatformStatic = PhysicsBody::createBox(Size(57.0f, 20.0f), PhysicsMaterial(0.0f, 0.0f, 0.0f), Vec2(55, -10));
-				spriteBodyPlatformStatic->setGravityEnable(false);
+				//spriteBodyPlatformStatic->setGravityEnable(false);
 				spriteBodyPlatformStatic->setDynamic(false);
 				spriteBodyPlatformStatic->setCollisionBitmask(2);
 				spriteBodyPlatformStatic->setContactTestBitmask(true);
@@ -162,12 +162,20 @@ bool HelloWorld::onContactBegin(cocos2d::PhysicsContact &contact)
 		{
 			return true;
 		}
+		else
+		{
+			return false;
+		}
 	}
 	else if (2 == a->getCollisionBitmask() && 1 == b->getCollisionBitmask())
 	{
 		if (a->getPosition().y >= b->getPosition().y)
 		{
-			return false;
+			return true;
+		}
+		else 
+		{ 
+			return false; 
 		}
 	}
 
