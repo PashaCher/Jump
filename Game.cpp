@@ -12,13 +12,12 @@ Scene* GameLayer::scene()
 	return scene;
 }
 
-void GameLayer::Accelerate(Acceleration *pAccelerationValue)
+void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
-	if (gameSuspended)
-		return;
+	if (gameSuspended) return;
 
 	float accel_filter = 0.1f;
-	bird_velocity.x = bird_velocity.x * accel_filter + pAccelerationValue->x * (1.0f - accel_filter) * 500.0f;
+	bird_velocity.x = bird_velocity.x * accel_filter + acc->x * (1.0f - accel_filter) * 500.0f;
 }
 
 GameLayer::GameLayer()
@@ -48,7 +47,7 @@ GameLayer::GameLayer()
 	scheduleUpdate();
 
 	setTouchEnabled(false);
-	setAccelerometerEnabled(true);
+	this->setAccelerometerEnabled(true);
 }
 
 void GameLayer::update(float dt)
